@@ -1,6 +1,16 @@
 # VRCMultiUploader [![Github All Releases](https://img.shields.io/github/downloads/i5ucc/VRCMultiUploader/total.svg)](https://github.com/I5UCC/VRCMultiUploader/releases/latest) <a href='https://ko-fi.com/i5ucc' target='_blank'><img height='35' style='border:0px;height:25px;' src='https://az743702.vo.msecnd.net/cdn/kofi3.png?v=0' border='0' alt='Buy Me a Coffee at ko-fi.com' />
 
+Do you have a multitude of different versions of an avatar? That with every little change you make you need to reupload every single version manually again, just to apply that change? Then this tool is for you!
 VRCMultiUploader is a tool designed to streamline the process of uploading multiple VRChat avatars automatically, saving you time!
+
+# Usage
+
+VRCMultiUploader is a tool that allows you to upload all active GameObjects with a Pipeline Manager. <br>
+However, it will display an error if the Pipeline Manager is empty. To avoid this, ensure that you set up the Avatar at least once manually.
+
+To use VRCMultiUploader, follow these steps:
+1. In the Unity Menu Bar, locate and select VRCMultiUploader.
+2. Choose between Build and Publish and Build and Test, depending on your requirements.
 
 # Download / Install
 
@@ -25,11 +35,4 @@ or <br>
   PS: You can also add `https://i5ucc.github.io/vpm/main.json` to add all of my projects (and future ones) to VCC.
 </details>
 
-# Usage
 
-VRCMultiUploader is a tool that allows you to upload all active GameObjects with a Pipeline Manager. <br>
-However, it will display an error if the Pipeline Manager is empty. To avoid this, ensure that you set up the Avatar at least once manually.
-
-To use VRCMultiUploader, follow these steps:
-1. In the Unity Menu Bar, locate and select VRCMultiUploader.
-2. Choose between Build and Publish and Build and Test, depending on your requirements.
