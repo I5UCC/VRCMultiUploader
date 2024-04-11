@@ -1,6 +1,6 @@
 # VRCMultiUploader [![Github All Releases](https://img.shields.io/github/downloads/i5ucc/VRCMultiUploader/total.svg)](https://github.com/I5UCC/VRCMultiUploader/releases/latest) <a href='https://ko-fi.com/i5ucc' target='_blank'><img height='35' style='border:0px;height:25px;' src='https://az743702.vo.msecnd.net/cdn/kofi3.png?v=0' border='0' alt='Buy Me a Coffee at ko-fi.com' />
 
-VRCMultiUploader is a tool designed to streamline the process of uploading multiple VRChat avatars simultaneously, saving you time and effort.
+VRCMultiUploader is a tool designed to streamline the process of uploading multiple VRChat avatars automatically, saving you time!
 
 # Download / Install
 
