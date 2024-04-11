@@ -8,12 +8,13 @@ VRCMultiUploader is a tool designed to streamline the process of uploading multi
 
 # Usage
 
-VRCMultiUploader is a tool that allows you to upload all active GameObjects with a Pipeline Manager. <br>
-However, it will display an error if the Pipeline Manager is empty. To avoid this, ensure that you set up the Avatar at least once manually.
+VRCMultiUploader is a tool that allows you to ***upload all active GameObjects with a Pipeline Manager***. <br>
+However, it will display an error if the Pipeline Manager is empty. To avoid this, ensure that you ***set up the Avatar at least once manually***.
 
 To use VRCMultiUploader, follow these steps:
-1. In the Unity Menu Bar, locate and select VRCMultiUploader.
-2. Choose between Build and Publish and Build and Test, depending on your requirements.
+1. In the ***Unity Menu Bar***, locate and select `VRCMultiUploader`.
+2. Select either `Build and Publish` or `Build and Test`, depending on your requirements.
+3. Profit??
 
 # Download / Install
 
