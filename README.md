@@ -1,7 +1,7 @@
 # VRCMultiUploader [![Github All Releases](https://img.shields.io/github/downloads/i5ucc/VRCMultiUploader/total.svg)](https://github.com/I5UCC/VRCMultiUploader/releases/latest) <a href='https://ko-fi.com/i5ucc' target='_blank'><img height='35' style='border:0px;height:25px;' src='https://az743702.vo.msecnd.net/cdn/kofi3.png?v=0' border='0' alt='Buy Me a Coffee at ko-fi.com' />
 
-Do you have a ***multitude of different versions of an avatar?***<br> 
-And with every little change you make you need to ***reupload every single version manually again***, just to apply that change? <br>
+Do you have a ***multitude of different versions of an avatar*** in one Project?<br> 
+And you're sick of ***reuploading every single version manually***, with every little change you make?<br>
 ***Then this tool is for you!***
 
 VRCMultiUploader is a tool designed to streamline the process of uploading multiple VRChat avatars automatically, saving you time!
