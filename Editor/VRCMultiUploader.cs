@@ -9,78 +9,80 @@ using VRC.SDK3A.Editor;
 using VRC.SDKBase.Editor.Api;
 using VRC.Core;
 using System.Threading;
+using System.Threading.Tasks;
 
-#if UNITY_EDITOR
 public class VRCMultiUploader : MonoBehaviour
 {
-    [MenuItem("VRCMultiUploader/Build and Test")]
-    private static void BuildAndTest()
-    {
-        BuildAndUploadAll(true);
-    }
+    [MenuItem("VRCMultiUploader/Build and Test", priority = 1)]
+    private static void BuildAndTest() => BuildAll(true);
 
-    [MenuItem("VRCMultiUploader/Build and Publish")]
-    private static void BuildAndUpload()
-    {
-        BuildAndUploadAll();
-    }
+    [MenuItem("VRCMultiUploader/Build and Publish", priority = 2)]
+    private static void BuildAndUpload() => BuildAll();
 
-    public static async void BuildAndUploadAll(bool test = false)
+    public static async Task BuildAll(bool test = false)
     {
-        if (SceneView.HasOpenInstances<VRCSdkControlPanel>())
-            SceneView.FocusWindowIfItsOpen(typeof(VRCSdkControlPanel));
-        else
-            SceneView.CreateWindow<VRCSdkControlPanel>();
-
+        EditorApplication.ExecuteMenuItem("VRChat SDK/Show Control Panel");
         GameObject avatarObject = null;
         string blueprintId = null;
+
         PipelineManager[] avatars = FindObjectsOfType<PipelineManager>();
         int avatarCount = avatars.Length;
 
-        Debug.Log("Uploading " + avatarCount + " avatars in the Scene");
         VRCMultiUploader_PopupWindow progressWindow = VRCMultiUploader_PopupWindow.Create(avatarCount);
-        progressWindow.Progress(0, "Starting upload process");
-        Thread.Sleep(2000);
+        Debug.Log("Found " + avatarCount + " active Avatars in the Scene.");
+
+        progressWindow.Progress(0, "Getting Builder...");
+        if (!VRCSdkControlPanel.TryGetBuilder(out IVRCSdkAvatarBuilderApi builder))
+        {
+            progressWindow.Close();
+            EditorUtility.DisplayDialog("MultiUploader - Error", "Could not get Builder. Please open the SDK Control Panel and try again.", "OK");
+            return;
+        }
 
         for (int i = 0; i < avatarCount; i++)
         {
             avatarObject = avatars[i].gameObject;
             blueprintId = avatars[i].blueprintId;
+
             if (!test && (blueprintId == null || blueprintId == ""))
             {
                 Debug.LogError("Avatar " + avatars[i].gameObject.name + " does not have a blueprintId set.");
-                EditorUtility.DisplayDialog("MultiUploader - Error", "Avatar " + avatarObject.name + " does not have a blueprintId set.\nPlease upload this avatar once before trying to update it with MultiUploader.\nThis avatar will be skipped.", "OK");
+                EditorUtility.DisplayDialog("MultiUploader - Error", "Avatar " + avatarObject.name + " does not have a blueprintId set."
+                    + "\nPlease upload this avatar once before trying to update it with MultiUploader."
+                    + "\nThis avatar will be skipped.", "OK");
                 continue;
             }
-            progressWindow.Progress(i + 1, "Uploading avatar:\n" + avatarObject.name);
 
-            if (!VRCSdkControlPanel.TryGetBuilder<IVRCSdkAvatarBuilderApi>(out var builder))
-            {
-                Debug.LogError("Could not get builder");
-                return;
-            }
-
+            progressWindow.Progress(i, "Uploading avatar:\n" + avatarObject.name);
             try
             {
                 if (!test)
                 {
-                    Debug.Log("Uploading avatar: " + avatarObject.name + " with blueprintId: " + blueprintId);
+                    Debug.Log($"Uploading avatar: {avatarObject.name} with blueprintId: {blueprintId}");
                     VRCAvatar av = await VRCApi.GetAvatar(blueprintId);
                     await builder.BuildAndUpload(avatarObject, av);
                 }
                 else
                 {
-                    Debug.Log("Uploading avatar " + avatarObject.name + " for testing.");
+                    Debug.Log($"Uploading avatar {avatarObject.name} for testing.");
                     await builder.BuildAndTest(avatarObject);
                 }
-                progressWindow.Progress(i + 1, "Finished uploading avatar:\n" + avatarObject.name, true);
+                progressWindow.Progress(i, "Finished uploading avatar:\n" + avatarObject.name, true);
                 Thread.Sleep(2000);
+            }
+            catch (NullReferenceException e)
+            {
+                progressWindow.Close();
+                EditorUtility.DisplayDialog("MultiUploader - Error", "SDK Control Panel hasn't been opened yet. Please open the SDK Control Panel and try again.", "OK");
+                Debug.LogError(e.Message + e.StackTrace);
+                return;
             }
             catch (Exception e)
             {
-                Debug.LogError(e.Message);
+                Debug.LogError(e.Message + e.StackTrace);
             }
         }
+
         progressWindow.Progress(avatarCount, "Finished uploading all Avatars!", true);
         Thread.Sleep(2000);
         progressWindow.Close();
@@ -123,7 +125,7 @@ public class VRCMultiUploader_PopupWindow : EditorWindow
 
         var infoBox = new VisualElement();
         root.Add(infoBox);
-        toplabel = new Label("- VRCMultiUploader by I5UCC -");
+        toplabel = new Label("- VRCMultiUploader v0.1.1 by I5UCC -");
         toplabel.style.paddingTop = 7;
         toplabel.style.paddingBottom = 10;
         toplabel.style.paddingLeft = 20;
@@ -152,16 +154,13 @@ public class VRCMultiUploader_PopupWindow : EditorWindow
 
     public void Progress(int current, string info, bool finished = false)
     {
-        Debug.Log($"Progress ({current}/{amountofAvatars}): {info}");
+        current += 1;
         label.text = info;
-        progress.value = (float)current / amountofAvatars * 100;
+        progress.value = (float)(current - 1) / amountofAvatars * 100;
         int percent = (int)Math.Round(progress.value);
-        if (percent == 100 && !finished)
-        {
-            percent = 99;
-            progress.value = 99;
-        }
+        if (current > amountofAvatars) current = amountofAvatars;
         progress.title = $"{current}/{amountofAvatars} ({percent}%)";
+        Debug.Log($"Progress ({current}/{amountofAvatars}): {info}");
         RepaintNow();
     }
 
@@ -215,4 +214,3 @@ public class VRCMultiUploader_PopupWindow : EditorWindow
         throw new System.NotSupportedException("Can't find internal main window. Maybe something has changed inside Unity");
     }
 }
-#endif
