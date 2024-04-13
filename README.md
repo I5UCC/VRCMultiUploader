@@ -20,10 +20,10 @@ To use VRCMultiUploader, follow these steps:
 
 Either download the latest release from [here](https://github.com/I5UCC/VRCMultiUploader/releases/latest), or add my Repository to VCC (VRChat Creator Companion): <br>
 
-[<img src="https://github.com/I5UCC/VRCMultiUploader/assets/43730681/62c783f6-4f7a-480b-a474-3adc4a207259"  width="217" height="35">](https://i5ucc.github.io/vpm/VRCMultiUploader.html) <br>
+[<img src="https://github.com/I5UCC/VRCMultiUploader/assets/43730681/7130b744-dcb7-4525-a62c-9bad41331c1c"  width="102" height="35">](https://i5ucc.github.io/vpm/VRCMultiUploader.html) <br>
 or <br>
 
-[<img src="https://user-images.githubusercontent.com/43730681/235304229-ce2b4689-4945-4282-967e-40bfbf8ebf54.png"  width="181" height="35">](https://i5ucc.github.io/vpm/main.html) <br>
+[<img src="https://user-images.githubusercontent.com/43730681/235304229-ce2b4689-4945-4282-967e-40bfbf8ebf54.png" height="35">](https://i5ucc.github.io/vpm/main.html) <br>
 
 <details>
   <summary>Manually adding to VCC:</summary>
