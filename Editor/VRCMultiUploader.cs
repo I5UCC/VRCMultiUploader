@@ -6,6 +6,7 @@ using UnityEngine.UIElements;
 using System;
 using System.Reflection;
 using VRC.SDK3A.Editor;
+using VRC.SDKBase.Editor;
 using VRC.SDKBase.Editor.Api;
 using VRC.Core;
 using System.Threading;
@@ -21,6 +22,8 @@ public class VRCMultiUploader : MonoBehaviour
 
     public static async Task BuildAll(bool test = false)
     {
+        foreach (var w in Resources.FindObjectsOfTypeAll<VRCMultiUploader_PopupWindow>())
+            if (w) w.Close();
         EditorApplication.ExecuteMenuItem("VRChat SDK/Show Control Panel");
         GameObject avatarObject = null;
         string blueprintId = null;
@@ -67,6 +70,11 @@ public class VRCMultiUploader : MonoBehaviour
                     Debug.Log($"Uploading avatar {avatarObject.name} for testing.");
                     await builder.BuildAndTest(avatarObject);
                 }
+                if (progressWindow.cancelled)
+                {
+                    progressWindow.Progress(i, $"Cancelled! ({i + 1}/{avatarCount})", true);
+                    return;
+                }
                 progressWindow.Progress(i, "Finished uploading avatar:\n" + avatarObject.name, true);
                 Thread.Sleep(2000);
             }
@@ -94,9 +102,11 @@ public class VRCMultiUploader_PopupWindow : EditorWindow
     private Label toplabel;
     private Label label;
     private Button ok_button;
+    private Button cancel_button;
     private ProgressBar progress;
     private VisualElement infoBox;
     private static int amountofAvatars;
+    public bool cancelled = false;
 
     static VRCMultiUploader_PopupWindow()
     {
@@ -126,7 +136,8 @@ public class VRCMultiUploader_PopupWindow : EditorWindow
 
         infoBox = new VisualElement();
         root.Add(infoBox);
-        toplabel = new Label("- VRCMultiUploader v0.1.2 by I5UCC -");
+
+        toplabel = new Label("- VRCMultiUploader v0.1.3 by I5UCC -");
         toplabel.style.paddingTop = 7;
         toplabel.style.paddingBottom = 10;
         toplabel.style.paddingLeft = 20;
@@ -151,6 +162,19 @@ public class VRCMultiUploader_PopupWindow : EditorWindow
         label.style.fontSize = 24;
         label.style.unityTextAlign = TextAnchor.MiddleCenter;
         infoBox.Add(label);
+
+        cancel_button = new Button(() =>
+        {
+            cancelled = true;
+            ShowOKButton();
+        });
+        cancel_button.text = "X";
+        cancel_button.style.width = 20;
+        cancel_button.style.height = 20;
+        cancel_button.style.position = Position.Absolute;
+        cancel_button.style.right = 0;
+        cancel_button.style.top = 2;
+        infoBox.Add(cancel_button);
     }
 
     public void ShowOKButton()
@@ -166,7 +190,9 @@ public class VRCMultiUploader_PopupWindow : EditorWindow
         ok_button.style.alignSelf = Align.Center;
 
         infoBox.Remove(progress);
+        infoBox.Remove(cancel_button);
         infoBox.Add(ok_button);
+        RepaintNow();
     }
 
     public void Progress(int current, string info, bool finished = false)
