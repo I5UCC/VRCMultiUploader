@@ -126,7 +126,7 @@ public class VRCMultiUploader_PopupWindow : EditorWindow
 
         infoBox = new VisualElement();
         root.Add(infoBox);
-        toplabel = new Label("- VRCMultiUploader v0.1.1 by I5UCC -");
+        toplabel = new Label("- VRCMultiUploader v0.1.2 by I5UCC -");
         toplabel.style.paddingTop = 7;
         toplabel.style.paddingBottom = 10;
         toplabel.style.paddingLeft = 20;
