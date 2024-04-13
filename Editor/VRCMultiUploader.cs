@@ -13,10 +13,10 @@ using System.Threading.Tasks;
 
 public class VRCMultiUploader : MonoBehaviour
 {
-    [MenuItem("VRCMultiUploader/Build and Test", priority = 1)]
+    [MenuItem("VRCMultiUploader/Build and Test")]
     private static void BuildAndTest() => BuildAll(true);
 
-    [MenuItem("VRCMultiUploader/Build and Publish", priority = 2)]
+    [MenuItem("VRCMultiUploader/Build and Publish")]
     private static void BuildAndUpload() => BuildAll();
 
     public static async Task BuildAll(bool test = false)
@@ -83,9 +83,8 @@ public class VRCMultiUploader : MonoBehaviour
             }
         }
 
-        progressWindow.Progress(avatarCount, "Finished uploading all Avatars!", true);
-        Thread.Sleep(2000);
-        progressWindow.Close();
+        progressWindow.Progress(avatarCount, $"Finished uploading all Avatars! ({avatarCount}/{avatarCount})", true);
+        progressWindow.ShowOKButton();
     }
 }
 
@@ -94,7 +93,9 @@ public class VRCMultiUploader_PopupWindow : EditorWindow
 {
     private Label toplabel;
     private Label label;
+    private Button ok_button;
     private ProgressBar progress;
+    private VisualElement infoBox;
     private static int amountofAvatars;
 
     static VRCMultiUploader_PopupWindow()
@@ -123,7 +124,7 @@ public class VRCMultiUploader_PopupWindow : EditorWindow
     {
         var root = rootVisualElement;
 
-        var infoBox = new VisualElement();
+        infoBox = new VisualElement();
         root.Add(infoBox);
         toplabel = new Label("- VRCMultiUploader v0.1.1 by I5UCC -");
         toplabel.style.paddingTop = 7;
@@ -150,6 +151,22 @@ public class VRCMultiUploader_PopupWindow : EditorWindow
         label.style.fontSize = 24;
         label.style.unityTextAlign = TextAnchor.MiddleCenter;
         infoBox.Add(label);
+    }
+
+    public void ShowOKButton()
+    {
+        ok_button = new Button(() => Close());
+        ok_button.text = "OK";
+        ok_button.style.width = 200;
+        ok_button.style.fontSize = 16;
+        ok_button.style.marginTop = 17;
+        ok_button.style.marginLeft = 20;
+        ok_button.style.marginRight = 20;
+        ok_button.style.unityTextAlign = TextAnchor.MiddleCenter;
+        ok_button.style.alignSelf = Align.Center;
+
+        infoBox.Remove(progress);
+        infoBox.Add(ok_button);
     }
 
     public void Progress(int current, string info, bool finished = false)
