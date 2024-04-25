@@ -12,19 +12,28 @@ namespace VRCMultiUploader
     {
         private Label toplabel;
         private Label label;
+        private Label bottomlabel;
         private Button ok_button;
         private Button cancel_button;
         private ProgressBar progress;
         private VisualElement infoBox;
         private static int amountofAvatars;
+        private static string version = "DEV";
         public bool cancelled = false;
 
         public static PopupWindow Create(int amount)
         {
+            TextAsset package = AssetDatabase.LoadAssetAtPath<TextAsset>("Packages/com.i5ucc.vrcmultiuploader/package.json");
+            if (package != null)
+            {
+                var json = JsonUtility.FromJson<PackageJson>(package.text);
+                version = json.version;
+            }
             amountofAvatars = amount;
+
             var window = CreateInstance<PopupWindow>();
             var mainWindowPos = GetEditorMainWindowPos();
-            var size = new Vector2(500, 125);
+            var size = new Vector2(500, 150);
             window.position = new Rect(mainWindowPos.xMin + (mainWindowPos.width - size.x) * 0.5f, mainWindowPos.yMax * 0.5f + 150, size.x, size.y);
             window.ShowPopup();
             return window;
@@ -43,9 +52,13 @@ namespace VRCMultiUploader
             var root = rootVisualElement;
 
             infoBox = new VisualElement();
+            infoBox.style.borderTopLeftRadius = 10;
+            infoBox.style.borderTopRightRadius = 10;
+            infoBox.style.borderBottomLeftRadius = 10;
+            infoBox.style.borderBottomRightRadius = 10;
             root.Add(infoBox);
 
-            toplabel = new Label("- VRCMultiUploader v0.1.4 by I5UCC -");
+            toplabel = new Label($"- VRCMultiUploader v{version} by I5UCC -");
             toplabel.style.paddingTop = 7;
             toplabel.style.paddingBottom = 10;
             toplabel.style.paddingLeft = 20;
@@ -64,18 +77,24 @@ namespace VRCMultiUploader
 
             label = new Label("");
             label.style.paddingTop = 5;
-            label.style.paddingBottom = 0;
+            label.style.paddingBottom = 2;
             label.style.paddingLeft = 20;
             label.style.paddingRight = 20;
             label.style.fontSize = 24;
             label.style.unityTextAlign = TextAnchor.MiddleCenter;
             infoBox.Add(label);
 
-            cancel_button = new Button(() =>
-            {
-                cancelled = true;
-                ShowOKButton();
-            });
+            bottomlabel = new Label("Starting build process...");
+            bottomlabel.style.paddingTop = 6;
+            bottomlabel.style.paddingBottom = 10;
+            bottomlabel.style.paddingLeft = 20;
+            bottomlabel.style.paddingRight = 20;
+            bottomlabel.style.fontSize = 13;
+            bottomlabel.style.backgroundColor = new Color(0, 0, 0, 0.1f);
+            bottomlabel.style.unityTextAlign = TextAnchor.MiddleCenter;
+            infoBox.Add(bottomlabel);
+
+            cancel_button = new Button();
             cancel_button.text = "X";
             cancel_button.style.width = 20;
             cancel_button.style.height = 20;
@@ -99,6 +118,7 @@ namespace VRCMultiUploader
 
             infoBox.Remove(progress);
             infoBox.Remove(cancel_button);
+            infoBox.Remove(bottomlabel);
             infoBox.Add(ok_button);
             RepaintNow();
         }
@@ -112,6 +132,19 @@ namespace VRCMultiUploader
             if (current > amountofAvatars) current = amountofAvatars;
             progress.title = $"{current}/{amountofAvatars} ({percent}%)";
             Debug.Log($"Progress ({current}/{amountofAvatars}): {info}");
+            RepaintNow();
+        }
+
+        public void SetCancelEvent(Action action)
+        {
+            cancel_button.clicked += action;
+        }
+
+        public void SetBottomLabel(string text, Color color = default)
+        {
+            bottomlabel.text = text;
+            if (color == default) color = Color.white;
+            bottomlabel.style.color = color;
             RepaintNow();
         }
 
@@ -166,4 +199,14 @@ namespace VRCMultiUploader
         }
     }
 
+    [Serializable]
+    class PackageJson
+    {
+        public string name;
+        public string displayName;
+        public string version;
+        public string description;
+        public string[] files;
+        public string type;
+    }
 }
