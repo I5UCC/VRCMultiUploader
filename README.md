@@ -1,4 +1,7 @@
-# VRCMultiUploader [![Github All Releases](https://img.shields.io/github/downloads/i5ucc/VRCMultiUploader/total.svg)](https://github.com/I5UCC/VRCMultiUploader/releases/latest) <a href='https://ko-fi.com/i5ucc' target='_blank'><img height='35' style='border:0px;height:25px;' src='https://az743702.vo.msecnd.net/cdn/kofi3.png?v=0' border='0' alt='Buy Me a Coffee at ko-fi.com' />
+# VRCMultiUploader 
+[![Github All Releases](https://img.shields.io/github/downloads/i5ucc/VRCMultiUploader/total.svg)](https://github.com/I5UCC/VRCMultiUploader/releases/latest)
+[![GitHub release (latest by date)](https://img.shields.io/github/downloads/i5ucc/VRCMultiUploader/latest/total?label=Latest%20version%20downloads)](https://github.com/I5UCC/VRCMultiUploader/releases/latest)
+<a href='https://ko-fi.com/i5ucc' target='_blank'><img height='35' style='border:0px;height:25px;' src='https://az743702.vo.msecnd.net/cdn/kofi3.png?v=0' border='0' alt='Buy Me a Coffee at ko-fi.com' />
 
 Do you have a ***multitude of different versions of an avatar*** in one Project?<br> 
 And you're sick of ***reuploading every single version manually***, with every little change you make?<br>
