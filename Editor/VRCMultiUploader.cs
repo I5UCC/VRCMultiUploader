@@ -92,7 +92,6 @@ namespace VRCMultiUploader
                         await builder.BuildAndTest(avatarObject);
                         success = true;
                     }
-                    if (progressWindow.cancelled) return;
                     progressWindow.Progress(i, "Finished uploading avatar:\n" + avatarObject.name, true);
                 }
                 catch (NullReferenceException e)
@@ -109,12 +108,17 @@ namespace VRCMultiUploader
                     progressWindow.cancelled = true;
                     Thread.Sleep(4000);
                     Debug.LogError(e.Message + e.StackTrace);
+                    if (e.Message.Contains("Avatar validation failed"))
+                    {
+                        EditorUtility.DisplayDialog("MultiUploader - Validation Error", "Validation Failed for " + avatarObject.name + ".\nPlease fix the errors and try again.", "OK");
+                    }
                     success = false;
                 }
                 catch (ValidationException e)
                 {
                     EditorUtility.DisplayDialog("MultiUploader - Error", e.Message + "\n" + string.Join("\n", e.Errors), "OK");
                     Debug.LogError(e.Message + e.StackTrace);
+                    EditorUtility.DisplayDialog("MultiUploader - Validation Error", "Please fix the errors and try again.", "OK");
                     success = false;
                 }
                 catch (OwnershipException e)
@@ -148,6 +152,7 @@ namespace VRCMultiUploader
                         Thread.Sleep(2000);
                     }
                 }
+                if (progressWindow.cancelled) return;
             }
 
             progressWindow.Progress(avatarCount, $"Finished uploading all Avatars! ({avatarCount}/{avatarCount})", true);
