@@ -1,7 +1,7 @@
 {
   "name": "com.i5ucc.vrcmultiuploader",
   "displayName": "VRCMultiUploader",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Tool for uploading Multiple VRChat Avatars at once.",
   "files": [
     "VRCMultiUploader.cs"
