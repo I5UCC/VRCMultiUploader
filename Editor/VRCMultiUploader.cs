@@ -7,12 +7,16 @@ using VRC.Core;
 using System.Threading;
 using System.Threading.Tasks;
 using VRC.SDKBase.Editor;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace VRCMultiUploader
 {
     [InitializeOnLoad]
     public class VrcMultiUploader : MonoBehaviour
     {
+        public static readonly string AgreementText = "By clicking OK, I certify that I have the necessary rights to upload this content and that it will not infringe on any third-party legal or intellectual property rights.";
+
         static VrcMultiUploader()
         {
             EditorApplication.delayCall += () =>
@@ -61,6 +65,7 @@ namespace VRCMultiUploader
             });
 
             bool success = false;
+            var acceptedAgreement = EditorUtility.DisplayDialog("VRC Copyright Agreement", AgreementText, "OK", "Disagree");
 
             for (int i = 0; i < avatarCount; i++)
             {
@@ -75,6 +80,14 @@ namespace VRCMultiUploader
                         + "\nThis avatar will be skipped.", "OK");
                     continue;
                 }
+
+                if (!acceptedAgreement)
+                {
+                    EditorUtility.DisplayDialog("MultiUploader - Error", "You need to accept the Copyright Agreement to continue.", "OK");
+                    progressWindow.Close();
+                    return;
+                }
+                await AddCopyrightAgreement(blueprintId);
 
                 progressWindow.Progress(i, "Uploading avatar:\n" + avatarObject.name);
                 try
@@ -158,6 +171,25 @@ namespace VRCMultiUploader
             progressWindow.Progress(avatarCount, $"Finished uploading all Avatars! ({avatarCount}/{avatarCount})", true);
             progressWindow.ShowOKButton();
             cts.Dispose();
+        }
+        
+        // Copied from anatawa12/ContinuousAvatarUploader, MIT Licensed
+        private static async Task AddCopyrightAgreement(string blueprint)
+        {
+            const string key = "VRCSdkControlPanel.CopyrightAgreement.ContentList";
+            var keyText = SessionState.GetString(key, "");
+            var list = string.IsNullOrEmpty(keyText) ? new List<string>() : SessionState.GetString(key, "").Split(';').ToList();
+            if (list.Contains(blueprint)) return;
+            list.Add(blueprint);
+            SessionState.SetString(key, string.Join(";", list));
+            
+            await VRCApi.ContentUploadConsent(new VRCAgreement
+            {
+                AgreementCode = "content.copyright.owned",
+                AgreementFulltext = AgreementText,
+                ContentId = blueprint,
+                Version = 1,
+            });
         }
     }
 }
