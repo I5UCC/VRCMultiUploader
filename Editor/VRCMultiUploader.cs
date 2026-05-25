@@ -96,7 +96,7 @@ namespace VRCMultiUploader
                     {
                         Debug.Log($"Uploading avatar: {avatarObject.name} with blueprintId: {blueprintId}");
                         VRCAvatar av = await VRCApi.GetAvatar(blueprintId);
-                        await builder.BuildAndUpload(avatarObject, av, cancellationToken: cts.Token);
+                        await builder.BuildAndUpload(avatarObject, PerPlatformOverrides.GetPlatformOverrides(avatarObject), av, cancellationToken: cts.Token);
                         success = true;
                     }
                     else
